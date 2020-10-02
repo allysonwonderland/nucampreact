@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,48 +18,30 @@ import { Control, LocalForm, Errors } from "react-redux-form";
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 
-class CommentForm extends Component {
-  constructor(props) {
-    super(props);
+function handleSubmit(values) {
+  console.log("Current state is: " + JSON.stringify(values));
+  alert("Current state is: " + JSON.stringify(values));
+}
 
-    this.state = {
-      isModalOpen: false,
-      touched: {
-        author: false,
-      },
-    };
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+function CommentForm() {
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
 
-  handleSubmit(values) {
-    console.log("Current state is: " + JSON.stringify(values));
-    alert("Current state is: " + JSON.stringify(values));
-  }
-
-  toggleModal() {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-    });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Button outline onClick={this.toggleModal}>
-          <i className="fa fa-pencil fa-lg" /> Submit Comment
-        </Button>
-
-        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
-          <ModalBody>
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-              <div className="form-group">
-                <Label htmlFor="rating">Rating</Label>
+  return (
+    <React.Fragment>
+      <Button outline onClick={toggle}>
+        <i className="fa fa-pencil fa-lg" /> Submit Comment
+      </Button>
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Submit Comment</ModalHeader>
+        <ModalBody>
+          <LocalForm onSubmit={(values) => handleSubmit(values)}>
+            <div className="form-group">
+              <div>
+                <Label select>Rating</Label>
                 <Control.select
                   model=".rating"
                   name="rating"
-                  id="rating"
                   className="form-control"
                 >
                   <option>1</option>
@@ -69,12 +51,13 @@ class CommentForm extends Component {
                   <option>5</option>
                 </Control.select>
               </div>
-              <div className="form-group">
-                <Label htmlFor="author">Your Name</Label>
+            </div>
+            <div className="form-group">
+              <div>
+                <Label text>Your Name</Label>
                 <Control.text
                   model=".author"
                   name="author"
-                  id="author"
                   className="form-control"
                   placeholder="Your Name"
                   validators={{
@@ -93,25 +76,26 @@ class CommentForm extends Component {
                   }}
                 />
               </div>
-              <div className="form-group">
-                <Label htmlFor="text">Comment</Label>
+            </div>
+            <div className="form-group">
+              <div>
+                <Label textarea>Comment</Label>
                 <Control.textarea
                   model=".text"
                   name="text"
-                  id="text"
                   className="form-control"
                   rows="6"
                 />
               </div>
-              <Button type="submit" color="primary">
-                Submit
-              </Button>
-            </LocalForm>
-          </ModalBody>
-        </Modal>
-      </React.Fragment>
-    );
-  }
+            </div>
+            <Button type="submit" color="primary">
+              Submit
+            </Button>
+          </LocalForm>
+        </ModalBody>
+      </Modal>
+    </React.Fragment>
+  );
 }
 
 function RenderCampsite({ campsite }) {
